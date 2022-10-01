@@ -1,0 +1,21 @@
+
+body {
+  background-image: url('./assets/img/03.jpg');
+  background-size: auto;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  animation: gradient 30s ease infinite;
+  min-height: 100vh;
+}
+
+@keyframes gradient {
+  0% {
+      background-position: 0% 100%;
+  }
+  50% {
+      background-position: 50% 100%;
+  }
+  100% {
+      background-position: 0% 100%;
+  }
+}
