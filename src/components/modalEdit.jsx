@@ -71,6 +71,7 @@ export default function modalEdit(item) {
     form.current.querySelector("#talla").value = person.talla;
     form.current.querySelector("#genero").value = person.genero;
     setDataImageBD(person.pago)
+    setBaseImage(person.pago)
   };
   const handleSubmit = async (e) => {
     setIsLoad(true);
