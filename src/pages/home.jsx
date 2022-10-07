@@ -119,7 +119,12 @@ export default function home() {
                     <th>Telefono</th>
                     <th>Origen</th>
                     <th className="">DNI</th>
-                    <th className="">Actions</th>
+                    <th
+                      className="position-sticky end-0"
+                      style={{ position: "-webkit-sticky" }}
+                    >
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -170,25 +175,30 @@ export default function home() {
                         <td className="text-nowrap">{item.telefono}</td>
                         <td className="text-nowrap">{item.origen}</td>
                         <td className="text-nowrap ">{item.dni}</td>
-                        <td className="d-flex flex-row">
-                          <button
-                            type="button"
-                            data-bs-toggle="modal"
-                            data-bs-target={`#b${item._id}`}
-                            className="btn btn-primary me-2"
-                          >
-                            <i className="bi bi-pencil"></i>
-                          </button>
-                          <button
-                            type="button"
-                            className="btn btn-danger"
-                            data-bs-toggle="modal"
-                            data-bs-target={`#a${item._id}`}
-                          >
-                            <i className="bi bi-trash"></i>
-                          </button>
-                          <Modaldelete dataPerson={item}></Modaldelete>
-                          <ModalEdit dataPerson={item}></ModalEdit>
+                        <td
+                          className="position-sticky end-0"
+                          style={{ position: "-webkit-sticky" }}
+                        >
+                          <div className="d-flex flex-row">
+                            <button
+                              type="button"
+                              data-bs-toggle="modal"
+                              data-bs-target={`#b${item._id}`}
+                              className="btn btn-primary me-2 d-inline-block align-self-start"
+                            >
+                              <i className="bi bi-pencil"></i>
+                            </button>
+                            <button
+                              type="button"
+                              className="btn btn-danger d-inline-block align-self-start"
+                              data-bs-toggle="modal"
+                              data-bs-target={`#a${item._id}`}
+                            >
+                              <i className="bi bi-trash"></i>
+                            </button>
+                            <Modaldelete dataPerson={item}></Modaldelete>
+                            <ModalEdit dataPerson={item}></ModalEdit>
+                          </div>
                         </td>
                       </tr>
                     );
