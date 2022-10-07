@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import Modaldelete from "../components/modaldelete";
 import ModalEdit from "../components/modalEdit";
+import ModalExport from "../components/modalexport";
 import { useNavigate } from "react-router-dom";
 
 export default function home() {
@@ -19,16 +20,16 @@ export default function home() {
   const filter = useRef(null);
 
   const logout = () => {
-    localStorage.clear()
-    navigate('/')
-  }
+    localStorage.clear();
+    navigate("/");
+  };
 
   const getPersonByDni = async (e) => {
     e.preventDefault();
     if (filter.current.value) {
       const dni = filter.current.value;
       const res = await axios.get(
-        `https://campamentoapi.pro/api/personas/dni/${dni}`
+        `https://campamentoapi.pro/api/personas/nombre/${dni}`
       );
       setActualPage(0);
       setPages(0);
@@ -66,35 +67,40 @@ export default function home() {
         <div className="card ">
           <div className="card-body position-relative">
             <div className="d-flex justify-content-between">
-              <h1 className="card-title">
-                Personas Registradas
-              </h1>
-              <button
-                type="button"
-                className="btn btn-danger"
-                onClick={logout}
-              >
+              <h1 className="card-title">Personas Registradas</h1>
+              <button type="button" className="btn btn-danger" onClick={logout}>
                 Cerrar Sesion
               </button>
             </div>
-            <p>Total de personas registras: {registerNumber}</p>
-            <form onSubmit={getPersonByDni}>
-              <div className="w-25" style={{ top: "10px", right: "30px" }}>
-                <label htmlFor="dni" className="form-label">
-                  Buscar por DNI
-                </label>
+            <div className="d-flex justify-content-between">
+              <div className="w-100">
+                <p>Total de personas registras: {registerNumber}</p>
+                <form onSubmit={getPersonByDni}>
+                  <div className="w-25" style={{ top: "10px", right: "30px" }}>
+                    <label htmlFor="nombre" className="form-label">
+                      Buscar por Nombre
+                    </label>
 
-                <input
-                  ref={filter}
-                  id="dni"
-                  type="text"
-                  className="form-control mb-4"
-                  placeholder="Buscar DNI"
-                  aria-label="DNI"
-                />
-                <button className="btn btn-primary">Buscar</button>
+                    <input
+                      ref={filter}
+                      id="nombre"
+                      type="text"
+                      className="form-control mb-4"
+                      placeholder="Buscar Nombre"
+                      aria-label="nombre"
+                    />
+                    <button className="btn btn-primary">Buscar</button>
+                  </div>
+                </form>
               </div>
-            </form>
+              {/* <button
+                className="btn btn-success h-25 align-self-end mb-4"
+                data-bs-toggle="modal"
+                data-bs-target={`#modalexport`}
+              >
+                Exportar
+              </button> */}
+            </div>
 
             <div className="table-responsive overflow-scroll pt-1">
               <table className="table table-light table-striped table-hover mw-100">
@@ -219,6 +225,7 @@ export default function home() {
             </ul>
           </div>
         </div>
+        <ModalExport></ModalExport>
       </div>
     );
   } else {
