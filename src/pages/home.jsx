@@ -196,9 +196,11 @@ export default function home() {
                             >
                               <i className="bi bi-trash"></i>
                             </button>
-                            <Modaldelete dataPerson={item}></Modaldelete>
-                            <ModalEdit dataPerson={item}></ModalEdit>
                           </div>
+                        </td>
+                        <td>
+                          <Modaldelete dataPerson={item}></Modaldelete>
+                          <ModalEdit dataPerson={item}></ModalEdit>
                         </td>
                       </tr>
                     );
