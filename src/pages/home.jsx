@@ -18,6 +18,9 @@ export default function home() {
   const [prevPage, setPrevPage] = useState(null);
   const [listPages, setListPages] = useState([]);
   const filter = useRef(null);
+  const [cupoSep, setCupoSep] = useState('');
+  const [cupoCom, setCupoCom] = useState('');
+  const [cupoPen, setCupoPen] = useState('');
 
   const logout = () => {
     localStorage.clear();
@@ -51,12 +54,23 @@ export default function home() {
     setListPerson(response.data.docs);
   };
 
+  const getGeneralValues = async () => {
+    const response = await axios.get(
+      `https://campamentoapi.pro/api/personas?size=600`
+    );
+    setCupoCom(response.data.docs.filter((item) => item.estado == "completado").length)
+    setCupoPen(response.data.docs.filter((item) => item.estado == "pendiente").length)
+    setCupoSep(response.data.docs.filter((item) => item.estado == "separado").length)
+
+  }
+
   useEffect(() => {
     setListPages([...Array(pages).keys()]);
   }, [pages]);
 
   useEffect(() => {
     getPersons(13, 0);
+    getGeneralValues();
   }, []);
   useEffect(() => {
     setListPerson(listPerson);
@@ -74,7 +88,10 @@ export default function home() {
             </div>
             <div className="d-flex justify-content-between">
               <div className="w-100">
-                <p>Total de personas registras: {registerNumber}</p>
+                <span>Total de personas registras: {registerNumber}</span>
+                <span className="ps-5">Total de cupos pendientes: {cupoPen}</span>
+                <span className="ps-5">Total de cupos separados (50%): {cupoSep}</span>
+                <span className="ps-5">Total de cupos completados: {cupoCom}</span>
                 <form onSubmit={getPersonByDni}>
                   <div className="w-25" style={{ top: "10px", right: "30px" }}>
                     <label htmlFor="nombre" className="form-label">
@@ -119,6 +136,7 @@ export default function home() {
                     <th>Telefono</th>
                     <th>Origen</th>
                     <th className="">DNI</th>
+                    <th>Comentario</th>
                     <th
                       className="position-sticky end-0"
                       style={{ position: "-webkit-sticky" }}
@@ -175,6 +193,7 @@ export default function home() {
                         <td className="text-nowrap">{item.telefono}</td>
                         <td className="text-nowrap">{item.origen}</td>
                         <td className="text-nowrap ">{item.dni}</td>
+                        <td>{item.comentario}</td>
                         <td
                           className="position-sticky end-0"
                           style={{ position: "-webkit-sticky" }}
