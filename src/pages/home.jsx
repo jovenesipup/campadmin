@@ -193,7 +193,7 @@ export default function home() {
                         <td className="text-nowrap">{item.telefono}</td>
                         <td className="text-nowrap">{item.origen}</td>
                         <td className="text-nowrap ">{item.dni}</td>
-                        <td>{item.comentario}</td>
+                        <td className="text-truncate" style={{maxWidth: "150px"}}>{item.comentario}</td>
                         <td
                           className="position-sticky end-0"
                           style={{ position: "-webkit-sticky" }}

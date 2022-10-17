@@ -55,7 +55,8 @@ export default function modalEdit(item) {
       ninos: data.ninos,
       talla: data.talla,
       genero: data.genero,
-      pago: data.pago
+      pago: data.pago,
+      comentario: data.comentario
     };
     form.current.querySelector("#name").value = person.name;
     form.current.querySelector("#last_name").value = person.lastname;
@@ -70,6 +71,7 @@ export default function modalEdit(item) {
     form.current.querySelector("#ninos").value = person.ninos;
     form.current.querySelector("#talla").value = person.talla;
     form.current.querySelector("#genero").value = person.genero;
+    form.current.querySelector("#comentario").value = person.comentario || "";
     setDataImageBD(person.pago)
     setBaseImage(person.pago)
   };
@@ -91,6 +93,7 @@ export default function modalEdit(item) {
       talla: form.current.querySelector("#talla").value,
       genero: form.current.querySelector("#genero").value,
       pago: baseImage,
+      comentario: form.current.querySelector("#comentario").value
     };
     console.log(typeof person.pago);
      const res = await axios
@@ -316,6 +319,17 @@ export default function modalEdit(item) {
                   />
                 </div>
               </div>
+              <label htmlFor="comentario" className="form-label">
+                    Comentario
+                  </label>
+
+                  <textarea
+                    id="comentario"
+                    className="form-control mb-4"
+                    placeholder="Comentario"
+                    aria-label="comentario"
+                    rows={2}
+                  />
               <br></br>
               <img src={baseImage || dataImageBD} className="w-100" />
             </div>
