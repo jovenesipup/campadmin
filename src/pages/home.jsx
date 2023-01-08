@@ -160,7 +160,7 @@ export default function home() {
                               (item.estado == "completado200" && "text-bg-info")
                             }`}
                           >
-                            {item.estado}
+                            {item.estado == 'completado200' ? 'completado (200)' : item.estado}
                           </span>
                         </td>
 
