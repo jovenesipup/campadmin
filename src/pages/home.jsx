@@ -157,10 +157,11 @@ export default function home() {
                               (item.estado == "separado" &&
                                 "text-bg-primary") ||
                               (item.estado == "completado" && "text-bg-success") ||
-                              (item.estado == "completado200" && "text-bg-info")
+                              (item.estado == "completado200" && "text-bg-info") ||
+                              (item.estado == "completado210" && "text-bg-info")
                             }`}
                           >
-                            {item.estado == 'completado200' ? 'completado (200)' : item.estado}
+                            {item.estado == 'completado200' && 'completado (200)' || item.estado == 'completado210' && 'completado (210)' || item.estado}
                           </span>
                         </td>
 

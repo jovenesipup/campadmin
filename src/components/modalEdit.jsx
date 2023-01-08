@@ -260,6 +260,7 @@ export default function modalEdit(item) {
                     <option value="separado">Separado</option>
                     <option value="completado">Completado</option>
                     <option value="completado200">Completado (con 200)</option>
+                    <option value="completado210">Completado (con 210)</option>
                   </select>
                   <label htmlFor="dni" className="form-label">
                     DNI
