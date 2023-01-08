@@ -156,7 +156,8 @@ export default function home() {
                                 "text-bg-danger") ||
                               (item.estado == "separado" &&
                                 "text-bg-primary") ||
-                              (item.estado == "completado" && "text-bg-success")
+                              (item.estado == "completado" && "text-bg-success") ||
+                              (item.estado == "completado200" && "text-bg-info")
                             }`}
                           >
                             {item.estado}
