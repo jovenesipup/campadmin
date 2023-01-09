@@ -13,10 +13,18 @@
     "axios": "^0.27.2",
     "bootstrap": "^5.2.1",
     "bootstrap-icons": "^1.9.1",
+    "cptable-fixed-xlsx-style": "^0.8.20",
+    "file-saver": "^2.0.5",
     "gh-pages": "^4.0.0",
+    "prop-types": "^15.8.1",
     "react": "^18.2.0",
+    "react-data-export": "^0.6.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "6.4.1"
+    "react-export-excel": "^0.5.3",
+    "react-html-table-to-excel": "^2.0.0",
+    "react-router-dom": "6.4.1",
+    "xlsx": "^0.18.5",
+    "xlsx-style": "^0.8.13"
   },
   "devDependencies": {
     "@types/react": "^18.0.17",

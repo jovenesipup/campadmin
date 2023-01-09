@@ -6,11 +6,13 @@ import Modaldelete from "../components/modaldelete";
 import ModalEdit from "../components/modalEdit";
 import ModalExport from "../components/modalexport";
 import { useNavigate } from "react-router-dom";
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 
 export default function home() {
   const navigate = useNavigate();
 
   const [listPerson, setListPerson] = useState([]);
+  const [listPersonExcel, setListPersonExcel] = useState([]);
   const [pages, setPages] = useState(0);
   const [registerNumber, setRegisterNumber] = useState("");
   const [actualPage, setActualPage] = useState(0);
@@ -27,6 +29,7 @@ export default function home() {
   const [cupoCom210, setCupoCom210] = useState('');
   const [cupoCom250, setCupoCom250] = useState('');
   const [cupoCom270, setCupoCom270] = useState('');
+
 
   const logout = () => {
     localStorage.clear();
@@ -59,6 +62,12 @@ export default function home() {
     setRegisterNumber(response.data.totalDocs);
     setListPerson(response.data.docs);
   };
+  const getPersonsExcel = async () => {
+    const response = await axios.get(
+      `https://campamentoapi.pro/api/personas?size=600`
+    );
+    setListPersonExcel(response.data.docs);
+  };
 
   const getGeneralValues = async () => {
     const response = await axios.get(
@@ -82,6 +91,7 @@ export default function home() {
 
   useEffect(() => {
     getPersons(13, 0);
+    getPersonsExcel()
     getGeneralValues();
   }, []);
   useEffect(() => {
@@ -127,6 +137,14 @@ export default function home() {
                     <button className="btn btn-primary">Buscar</button>
                   </div>
                 </form>
+                <ReactHTMLTableToExcel
+                    id="test-table-xls-button"
+                    className="btn btn-success my-3"
+                    table="lista"
+                    filename="Registrados"
+                    sheet="Pagina"
+                    buttonText="Exportar Excel"/>
+
               </div>
               {/* <button
                 className="btn btn-success h-25 align-self-end mb-4"
@@ -138,7 +156,7 @@ export default function home() {
             </div>
 
             <div className="table-responsive overflow-scroll pt-1">
-              <table className="table table-light table-striped table-hover mw-100" id='lista'>
+              <table className="table table-light table-striped table-hover mw-100">
                 <thead>
                   <tr className="text-left bg-slate-400">
                     <th>Estado</th>
@@ -281,6 +299,85 @@ export default function home() {
           </div>
         </div>
         {/* <ModalExport></ModalExport> */}
+        <table className="table hidden table-light table-striped table-hover mw-100" id='lista'>
+                <thead>
+                  <tr className="text-left bg-slate-400">
+                    <th>Estado</th>
+                    <th>Nombre</th>
+                    <th>Apellidos</th>
+                    <th>Genero</th>
+                    <th>E. Civil</th>
+                    <th>Ninos</th>
+                    <th>Talla</th>
+                    <th>Pastor</th>
+                    <th>Iglesia</th>
+                    <th>Correo</th>
+                    <th>Telefono</th>
+                    <th>Origen</th>
+                    <th className="">DNI</th>
+                    <th>Comentario</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {listPersonExcel.map((item, key) => {
+                    return (
+                      <tr key={key}>
+                        <td className="text-nowrap">
+                          <span
+                            className={`badge ${
+                              (item.estado == "pendiente" &&
+                                "text-bg-danger") ||
+                              (item.estado == "separado" &&
+                                "text-bg-primary") ||
+                              (item.estado == "separado125" && "text-bg-primary") ||
+                              (item.estado == "separado135" && "text-bg-primary") ||
+                              (item.estado == "completado" && "text-bg-success") ||
+                              (item.estado == "completado200" && "text-bg-info") ||
+                              (item.estado == "completado210" && "text-bg-info") ||
+                              (item.estado == "completado250" && "text-bg-info") ||
+                              (item.estado == "completado270" && "text-bg-info")
+                            }`}
+                          >
+                            {item.estado == 'completado200' && 'completado (200)' || item.estado == 'completado210' && 'completado (210)' || item.estado == 'completado250' && 'completado (250)' || item.estado == 'completado270' && 'completado (270)' || item.estado == 'separado125' && 'separado (125)' || item.estado == 'separado135' && 'separado (135)' || item.estado}
+                          </span>
+                        </td>
+
+                        <td className="text-nowrap text-break">
+                          {item.nombre}
+                        </td>
+                        <td className="text-nowrap text-break">
+                          {item.apellidos}
+                        </td>
+                        <td className="text-nowrap text-break">
+                          {item.genero || "M"}
+                        </td>
+                        <td className="text-nowrap text-break">
+                          {item.civil || "Soltero"}
+                        </td>
+                        <td className="text-nowrap text-break">
+                          {item.ninos || "No aplica"}
+                        </td>
+                        <td className="text-nowrap text-break">
+                          {item.talla || "M"}
+                        </td>
+                        <td className="text-nowrap text-break">
+                          {item.pastor}
+                        </td>
+                        <td className="text-nowrap text-break">
+                          {item.iglesia}
+                        </td>
+                        <td className="text-nowrap text-break">
+                          {item.correo}
+                        </td>
+                        <td className="text-nowrap">{item.telefono}</td>
+                        <td className="text-nowrap">{item.origen}</td>
+                        <td className="text-nowrap ">{item.dni}</td>
+                        <td className="text-truncate" style={{maxWidth: "150px"}}>{item.comentario}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
       </div>
     );
   } else {
