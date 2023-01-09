@@ -299,7 +299,7 @@ export default function home() {
           </div>
         </div>
         {/* <ModalExport></ModalExport> */}
-        <table className="table hidden table-light table-striped table-hover mw-100" id='lista'>
+        <table className="table d-none table-light table-striped table-hover mw-100" id='lista'>
                 <thead>
                   <tr className="text-left bg-slate-400">
                     <th>Estado</th>
