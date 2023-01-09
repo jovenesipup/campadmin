@@ -21,6 +21,12 @@ export default function home() {
   const [cupoSep, setCupoSep] = useState('');
   const [cupoCom, setCupoCom] = useState('');
   const [cupoPen, setCupoPen] = useState('');
+  const [cupoPen125, setCupoPen125] = useState('');
+  const [cupoPen135, setCupoPen135] = useState('');
+  const [cupoCom200, setCupoCom200] = useState('');
+  const [cupoCom210, setCupoCom210] = useState('');
+  const [cupoCom250, setCupoCom250] = useState('');
+  const [cupoCom270, setCupoCom270] = useState('');
 
   const logout = () => {
     localStorage.clear();
@@ -59,8 +65,14 @@ export default function home() {
       `https://campamentoapi.pro/api/personas?size=600`
     );
     setCupoCom(response.data.docs.filter((item) => item.estado == "completado").length)
+    setCupoCom200(response.data.docs.filter((item) => item.estado == "completado200").length)
+    setCupoCom210(response.data.docs.filter((item) => item.estado == "completado210").length)
+    setCupoCom250(response.data.docs.filter((item) => item.estado == "completado250").length)
+    setCupoCom270(response.data.docs.filter((item) => item.estado == "completado270").length)
     setCupoPen(response.data.docs.filter((item) => item.estado == "pendiente").length)
     setCupoSep(response.data.docs.filter((item) => item.estado == "separado").length)
+    setCupoPen125(response.data.docs.filter((item) => item.estado == "separado125").length)
+    setCupoPen135(response.data.docs.filter((item) => item.estado == "separado135").length)
 
   }
 
@@ -91,7 +103,13 @@ export default function home() {
                 <span>Total de personas registras: {registerNumber}</span>
                 <span className="ps-5">Total de cupos pendientes: {cupoPen}</span>
                 <span className="ps-5">Total de cupos separados (50%): {cupoSep}</span>
+                <span className="ps-5">Total de cupos separados (125): {cupoPen125}</span>
+                <span className="ps-5">Total de cupos separados (135): {cupoPen135}</span>
                 <span className="ps-5">Total de cupos completados: {cupoCom}</span>
+                <span className="ps-5">Total de cupos completados (200): {cupoCom200}</span>
+                <span className="ps-5">Total de cupos completados (210): {cupoCom210}</span>
+                <span className="ps-5">Total de cupos completados (250): {cupoCom250}</span>
+                <span className="ps-5">Total de cupos completados (270): {cupoCom270}</span>
                 <form onSubmit={getPersonByDni}>
                   <div className="w-25" style={{ top: "10px", right: "30px" }}>
                     <label htmlFor="nombre" className="form-label">
@@ -116,11 +134,11 @@ export default function home() {
                 data-bs-target={`#modalexport`}
               >
                 Exportar
-              </button> */}
+              </button>  */}
             </div>
 
             <div className="table-responsive overflow-scroll pt-1">
-              <table className="table table-light table-striped table-hover mw-100">
+              <table className="table table-light table-striped table-hover mw-100" id='lista'>
                 <thead>
                   <tr className="text-left bg-slate-400">
                     <th>Estado</th>
@@ -156,12 +174,16 @@ export default function home() {
                                 "text-bg-danger") ||
                               (item.estado == "separado" &&
                                 "text-bg-primary") ||
+                              (item.estado == "separado125" && "text-bg-primary") ||
+                              (item.estado == "separado135" && "text-bg-primary") ||
                               (item.estado == "completado" && "text-bg-success") ||
                               (item.estado == "completado200" && "text-bg-info") ||
-                              (item.estado == "completado210" && "text-bg-info")
+                              (item.estado == "completado210" && "text-bg-info") ||
+                              (item.estado == "completado250" && "text-bg-info") ||
+                              (item.estado == "completado270" && "text-bg-info")
                             }`}
                           >
-                            {item.estado == 'completado200' && 'completado (200)' || item.estado == 'completado210' && 'completado (210)' || item.estado}
+                            {item.estado == 'completado200' && 'completado (200)' || item.estado == 'completado210' && 'completado (210)' || item.estado == 'completado250' && 'completado (250)' || item.estado == 'completado270' && 'completado (270)' || item.estado == 'separado125' && 'separado (125)' || item.estado == 'separado135' && 'separado (135)' || item.estado}
                           </span>
                         </td>
 
@@ -258,7 +280,7 @@ export default function home() {
             </ul>
           </div>
         </div>
-        <ModalExport></ModalExport>
+        {/* <ModalExport></ModalExport> */}
       </div>
     );
   } else {
