@@ -162,6 +162,8 @@ export default function home() {
                     <th>Estado</th>
                     <th>Nombre</th>
                     <th>Apellidos</th>
+                    <th>Es Niño</th>
+                    <th>Edad</th>
                     <th>Genero</th>
                     <th>E. Civil</th>
                     <th>Ninos</th>
@@ -210,6 +212,12 @@ export default function home() {
                         </td>
                         <td className="text-nowrap text-break">
                           {item.apellidos}
+                        </td>
+                        <td className="text-nowrap text-break">
+                          {item.infante == true && 'Si' || 'No'}
+                        </td>
+                        <td className="text-nowrap text-break">
+                          {item.edad || 'N/A'}
                         </td>
                         <td className="text-nowrap text-break">
                           {item.genero || "M"}
@@ -305,6 +313,8 @@ export default function home() {
                     <th>Estado</th>
                     <th>Nombre</th>
                     <th>Apellidos</th>
+                    <th>Es Niño</th>
+                    <th>Edad</th>
                     <th>Genero</th>
                     <th>E. Civil</th>
                     <th>Ninos</th>
@@ -347,6 +357,12 @@ export default function home() {
                         </td>
                         <td className="text-nowrap text-break">
                           {item.apellidos}
+                        </td>
+                        <td className="text-nowrap text-break">
+                          {item.infante == true && 'Si' || 'No'}
+                        </td>
+                        <td className="text-nowrap text-break">
+                          {item.edad || 'N/A'}
                         </td>
                         <td className="text-nowrap text-break">
                           {item.genero || "M"}

@@ -56,7 +56,9 @@ export default function modalEdit(item) {
       talla: data.talla,
       genero: data.genero,
       pago: data.pago,
-      comentario: data.comentario
+      comentario: data.comentario,
+      infante: data.infante,
+      edad: data.edad
     };
     form.current.querySelector("#name").value = person.name;
     form.current.querySelector("#last_name").value = person.lastname;
@@ -70,6 +72,8 @@ export default function modalEdit(item) {
     form.current.querySelector("#civil").value = person.civil;
     form.current.querySelector("#ninos").value = person.ninos;
     form.current.querySelector("#talla").value = person.talla;
+    form.current.querySelector("#edad").value = person.edad;
+    form.current.querySelector("#infante").value = person.infante || "false";
     form.current.querySelector("#genero").value = person.genero;
     form.current.querySelector("#comentario").value = person.comentario || "";
     setDataImageBD(person.pago)
@@ -92,6 +96,8 @@ export default function modalEdit(item) {
       civil: form.current.querySelector("#civil").value,
       talla: form.current.querySelector("#talla").value,
       genero: form.current.querySelector("#genero").value,
+      edad: form.current.querySelector("#edad").value,
+      infante: form.current.querySelector("#infante").value,
       pago: baseImage,
       comentario: form.current.querySelector("#comentario").value
     };
@@ -162,6 +168,17 @@ export default function modalEdit(item) {
                     className="form-control mb-4"
                     placeholder="Apellidos"
                     aria-label="Apellidos"
+                  />
+                  <label htmlFor="edad" className="form-label">
+                    Edad
+                  </label>
+
+                  <input
+                    id="edad"
+                    type="number"
+                    className="form-control mb-4"
+                    placeholder="Edad"
+                    aria-label="Edad"
                   />
                   <label htmlFor="pastor" className="form-label">
                     Pastor
@@ -246,6 +263,18 @@ export default function modalEdit(item) {
                   >
                     <option value="Lima">Lima</option>
                     <option value="Provincia">Provincia</option>
+                  </select>
+                  <label htmlFor="infante" className="form-label">
+                    Es Niño
+                  </label>
+
+                  <select
+                    id="infante"
+                    className="form-select mb-4"
+                    aria-label="Seleccione"
+                  >
+                    <option value="true">Si</option>
+                    <option value="false">No</option>
                   </select>
                   <label htmlFor="estado" className="form-label">
                     Estado
