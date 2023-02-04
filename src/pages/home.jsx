@@ -29,6 +29,11 @@ export default function home() {
   const [cupoCom210, setCupoCom210] = useState('');
   const [cupoCom250, setCupoCom250] = useState('');
   const [cupoCom270, setCupoCom270] = useState('');
+  const [selected, setSelected] = useState(false)
+  const [selectedFilter, setSelectedFilter] = useState('')
+  const classBorder = 'border border-3 border-primary'
+  const [filterStatus, setFilterStatus] = useState(false)
+  const [actualStatus, setActualStatus] = useState(null)
 
 
   const logout = () => {
@@ -62,6 +67,46 @@ export default function home() {
     setRegisterNumber(response.data.totalDocs);
     setListPerson(response.data.docs);
   };
+  const getPersonByStatus = async (limit, skipPage, status) => {
+
+    document.querySelector(`#${actualStatus}`)?.classList?.remove('border-primary')
+    document.querySelector(`#${actualStatus}`)?.classList?.remove('border-3')
+    document.querySelector(`#${actualStatus}`)?.classList?.remove('border')
+    document.querySelector(`#${status}`)?.classList?.add('border-primary')
+    document.querySelector(`#${status}`)?.classList?.add('border-3')
+    document.querySelector(`#${status}`)?.classList?.add('border')
+
+    const total = await axios.get(`https://campamentoapi.pro/api/personas/estado/${status}&600&0`)
+
+    const response = await axios.get(`https://campamentoapi.pro/api/personas/estado/${status}&${limit}&${skipPage}`
+    ).then((response) => {
+      console.log(response.data)
+      setListPerson(response.data)
+      setPages(Math.ceil(total.data.length / 13))
+      if(skipPage > 0) {
+        setActualPage((skipPage/13) + 1)
+      }else{
+        setActualPage(1)
+      }
+
+    }).catch((err) => {
+      console.log(err)
+    })
+
+    setActualStatus(status)
+    setFilterStatus(true)
+
+  }
+
+  const getOrFilter = (limit, item) => {
+    const newItem = item
+    if(filterStatus){
+      getPersonByStatus(limit, limit*newItem, actualStatus)
+    }else{
+      getPersons(limit, item)
+    }
+  }
+
   const getPersonsExcel = async () => {
     const response = await axios.get(
       `https://campamentoapi.pro/api/personas?size=600`
@@ -110,16 +155,28 @@ export default function home() {
             </div>
             <div className="d-flex justify-content-between">
               <div className="w-100">
-                <span>Total de personas registras: {registerNumber}</span>
-                <span className="ps-5">Total de cupos pendientes: {cupoPen}</span>
-                <span className="ps-5">Total de cupos separados (50%): {cupoSep}</span>
-                <span className="ps-5">Total de cupos separados (125): {cupoPen125}</span>
-                <span className="ps-5">Total de cupos separados (135): {cupoPen135}</span>
-                <span className="ps-5">Total de cupos completados: {cupoCom}</span>
-                <span className="ps-5">Total de cupos completados (200): {cupoCom200}</span>
-                <span className="ps-5">Total de cupos completados (210): {cupoCom210}</span>
-                <span className="ps-5">Total de cupos completados (250): {cupoCom250}</span>
-                <span className="ps-5">Total de cupos completados (270): {cupoCom270}</span>
+                <div className="container">
+                  <div className="row">
+                    <div className={`p-2 m-1 col card`}>Total de personas registras: {registerNumber}</div>
+                    <div className={`p-2 m-1 col card`} id='pendiente' role='button' onClick={() => getPersonByStatus(13,0,'pendiente')}>Total de cupos pendientes: {cupoPen}</div>
+                    <div className={`p-2 m-1 col card`} id='separado' role='button' onClick={() => getPersonByStatus(13,0,'separado')}>Total de cupos separados (50%): {cupoSep}</div>
+                  </div>
+                  <div className="row">
+                    <div className={`p-2 m-1 col card`} id='separado125' role='button' onClick={() => getPersonByStatus(13,0,'separado125')}>Total de cupos separados (125): {cupoPen125}</div>
+                    <div className={`p-2 m-1 col card`} id='separado135' role='button' onClick={() => getPersonByStatus(13,0,'separado135')}>Total de cupos separados (135): {cupoPen135}</div>
+                    <div className={`p-2 m-1 col card`} id='completado' role='button' onClick={() => getPersonByStatus(13,0,'completado')}>Total de cupos completados: {cupoCom}</div>
+                  </div>
+                  <div className="row">
+                    <div className={`p-2 m-1 col card`} id='completado200' role='button' onClick={() => getPersonByStatus(13,0,'completado200')}>Total de cupos completados (200): {cupoCom200}</div>
+                    <div className={`p-2 m-1 col card`} id='completado210' role='button' onClick={() => getPersonByStatus(13,0,'completado210')}>Total de cupos completados (210): {cupoCom210}</div>
+                    <div className={`p-2 m-1 col card`} id='completado250' role='button' onClick={() => getPersonByStatus(13,0,'completado250')}>Total de cupos completados (250): {cupoCom250}</div>
+                  </div>
+                  <div className="row">
+                    <div className={`p-2 m-1 col card`} id='completado270' role='button' onClick={() => getPersonByStatus(13,0,'completado270')}>Total de cupos completados (270): {cupoCom270}</div>
+                    <div className="p-2 m-1 col"></div>
+                    <div className="col m-1 p-2"></div>
+                  </div>
+                </div>
                 <form onSubmit={getPersonByDni}>
                   <div className="w-25" style={{ top: "10px", right: "30px" }}>
                     <label htmlFor="nombre" className="form-label">
@@ -291,7 +348,7 @@ export default function home() {
                         className={`page-link ${
                           actualPage == jey + 1 ? "active" : ""
                         }`}
-                        onClick={() => getPersons(13, item)}
+                        onClick={() => getOrFilter(13, item)}
                       >
                         {item + 1}
                       </button>
