@@ -7,6 +7,7 @@ import ModalEdit from "../components/modalEdit";
 import ModalExport from "../components/modalexport";
 import { useNavigate } from "react-router-dom";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
+import ModalQr from "../components/modalQr";
 
 export default function home() {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ export default function home() {
   const classBorder = "border border-3 border-primary";
   const [filterStatus, setFilterStatus] = useState(false);
   const [actualStatus, setActualStatus] = useState(null);
-  const [tipoFiltro, setTipoFiltro] = useState('nombre')
+  const [tipoFiltro, setTipoFiltro] = useState("nombre");
 
   const logout = () => {
     localStorage.clear();
@@ -43,7 +44,7 @@ export default function home() {
 
   const getPersonByDni = async (e) => {
     e.preventDefault();
-    if (filter.current.value && filter.current.id == 'nombre') {
+    if (filter.current.value && filter.current.id == "nombre") {
       const dni = filter.current.value;
       const res = await axios.get(
         `https://campamentoapi.pro/api/personas/nombre/${dni}`
@@ -51,7 +52,7 @@ export default function home() {
       setActualPage(0);
       setPages(0);
       setListPerson(res.data);
-    }else if(filter.current.value && filter.current.id == 'dni'){
+    } else if (filter.current.value && filter.current.id == "dni") {
       const dni = filter.current.value;
       const res = await axios.get(
         `https://campamentoapi.pro/api/personas/dni/${dni}`
@@ -59,8 +60,7 @@ export default function home() {
       setActualPage(0);
       setPages(0);
       setListPerson(res.data);
-    }
-     else {
+    } else {
       getPersons(13, 0);
     }
   };
@@ -176,6 +176,7 @@ export default function home() {
   if (localStorage.getItem("user")) {
     return (
       <div className="container py-5">
+        <ModalQr></ModalQr>
         <div className="card ">
           <div className="card-body position-relative">
             <div className="d-flex justify-content-between">
@@ -335,7 +336,7 @@ export default function home() {
                       data-bs-parent="#accordionFilter"
                     >
                       <div className="accordion-body">
-                        <div className="card w-25 p-2 m-1">
+                        <div className="card col-lg-4 p-2 m-1">
                           <div className="w-100">
                             <label htmlFor="filtro" className="form-label">
                               Filtrar por:
@@ -356,9 +357,12 @@ export default function home() {
                               className="w-100"
                               style={{ top: "10px", right: "30px" }}
                             >
-                              {tipoFiltro == 'nombre' && (
+                              {(tipoFiltro == "nombre" && (
                                 <div>
-                                  <label htmlFor="nombre" className="form-label">
+                                  <label
+                                    htmlFor="nombre"
+                                    className="form-label"
+                                  >
                                     Buscar por Nombre
                                   </label>
 
@@ -374,7 +378,7 @@ export default function home() {
                                     Buscar
                                   </button>
                                 </div>
-                              ) || (
+                              )) || (
                                 <div>
                                   <label htmlFor="dni" className="form-label">
                                     Buscar por DNI
@@ -409,6 +413,14 @@ export default function home() {
                   sheet="Pagina"
                   buttonText="Exportar Excel"
                 />
+                <button
+                  type="button"
+                  data-bs-toggle="modal"
+                  data-bs-target={`#modalQr`}
+                  className="btn btn-primary ms-2 d-inline-block align-self-start"
+                >
+                  Escanear QR
+                </button>
               </div>
               {/* <button
                 className="btn btn-success h-25 align-self-end mb-4"
