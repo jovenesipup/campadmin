@@ -67,6 +67,9 @@ export default function modalQr() {
                         }}
                         scanDelay={2000}
                         style={{ width: '100%'}}
+                        constraints={{
+                            facingMode: 'environment'
+                        }}
                     />
                 </div>
             )}
