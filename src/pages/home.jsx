@@ -177,22 +177,22 @@ export default function home() {
     );
     setTallaS(
       response.data.docs.filter(
-        (item) => item.estado != "pendiente" && item.talla == "S"
+        (item) => item.estado != "pendiente" && item.hospeda != 'carpa' && item.talla == "S"
       ).length
     );
     setTallaM(
       response.data.docs.filter(
-        (item) => item.estado != "pendiente" && item.talla == "M"
+        (item) => item.estado != "pendiente" && item.hospeda != 'carpa' && item.talla == "M"
       ).length
     );
     setTallaL(
       response.data.docs.filter(
-        (item) => item.estado != "pendiente" && item.talla == "L"
+        (item) => item.estado != "pendiente" && item.hospeda != 'carpa' && item.talla == "L"
       ).length
     );
     setTallaXL(
       response.data.docs.filter(
-        (item) => item.estado != "pendiente" && item.talla == "XL"
+        (item) => item.estado != "pendiente" && item.hospeda != 'carpa' && item.talla == "XL"
       ).length
     );
     console.log(response.data.docs);
