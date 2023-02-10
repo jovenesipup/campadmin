@@ -167,12 +167,12 @@ export default function home() {
     );
     setCupoMale(
       response.data.docs.filter(
-        (item) => item.estado != "pendiente" && item.genero == "M"
+        (item) => item.estado != "pendiente" && item.hospeda != 'carpa' && item.genero == "M"
       ).length
     );
     setCupoFemale(
       response.data.docs.filter(
-        (item) => item.estado != "pendiente" && item.genero == "F"
+        (item) => item.estado != "pendiente" && item.hospeda != 'carpa' && item.genero == "F"
       ).length
     );
     setTallaS(
