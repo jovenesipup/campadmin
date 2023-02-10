@@ -30,6 +30,12 @@ export default function home() {
   const [cupoCom210, setCupoCom210] = useState("");
   const [cupoCom250, setCupoCom250] = useState("");
   const [cupoCom270, setCupoCom270] = useState("");
+  const [cupoMale, setCupoMale] = useState("");
+  const [cupoFemale, setCupoFemale] = useState("");
+  const [tallaS, setTallaS] = useState("");
+  const [tallaM, setTallaM] = useState("");
+  const [tallaL, setTallaL] = useState("");
+  const [tallaXL, setTallaXL] = useState("");
   const [selected, setSelected] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("");
   const classBorder = "border border-3 border-primary";
@@ -159,6 +165,37 @@ export default function home() {
     setCupoPen135(
       response.data.docs.filter((item) => item.estado == "separado135").length
     );
+    setCupoMale(
+      response.data.docs.filter(
+        (item) => item.estado != "pendiente" && item.genero == "M"
+      ).length
+    );
+    setCupoFemale(
+      response.data.docs.filter(
+        (item) => item.estado != "pendiente" && item.genero == "F"
+      ).length
+    );
+    setTallaS(
+      response.data.docs.filter(
+        (item) => item.estado != "pendiente" && item.talla == "S"
+      ).length
+    );
+    setTallaM(
+      response.data.docs.filter(
+        (item) => item.estado != "pendiente" && item.talla == "M"
+      ).length
+    );
+    setTallaL(
+      response.data.docs.filter(
+        (item) => item.estado != "pendiente" && item.talla == "L"
+      ).length
+    );
+    setTallaXL(
+      response.data.docs.filter(
+        (item) => item.estado != "pendiente" && item.talla == "XL"
+      ).length
+    );
+    console.log(response.data.docs);
   };
 
   useEffect(() => {
@@ -309,7 +346,6 @@ export default function home() {
                             >
                               Total de cupos completados (270): {cupoCom270}
                             </div>
-                            <div className="p-2 m-1 col"></div>
                             <div className="col m-1 p-2"></div>
                           </div>
                         </div>
@@ -404,23 +440,36 @@ export default function home() {
                     </div>
                   </div>
                 </div>
-
-                <ReactHTMLTableToExcel
-                  id="test-table-xls-button"
-                  className="btn btn-success my-3"
-                  table="lista"
-                  filename="Registrados"
-                  sheet="Pagina"
-                  buttonText="Exportar Excel"
-                />
-                <button
-                  type="button"
-                  data-bs-toggle="modal"
-                  data-bs-target={`#modalQr`}
-                  className="btn btn-primary ms-2 d-inline-block align-self-start"
-                >
-                  Escanear QR
-                </button>
+                <div className="d-flex flex-row justify-content-between">
+                  <div>
+                    <ReactHTMLTableToExcel
+                      id="test-table-xls-button"
+                      className="btn btn-success my-3"
+                      table="lista"
+                      filename="Registrados"
+                      sheet="Pagina"
+                      buttonText="Exportar Excel"
+                    />
+                    <button
+                      type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target={`#modalQr`}
+                      className="btn btn-primary ms-2 d-inline-block align-self-start"
+                    >
+                      Escanear QR
+                    </button>
+                  </div>
+                  <div>
+                    <div className={`p-2 m-1 col card`}>
+                      (Hombres): {cupoMale} | (Mujeres): {cupoFemale}
+                    </div>
+                  </div>
+                  <div>
+                    <div className={`p-2 m-1 col card`}>
+                      (Polos S): {tallaS} | (Polos M): {tallaM} | (Polos L): {tallaL} | (Polos XL): {tallaXL}
+                    </div>
+                  </div>
+                </div>
               </div>
               {/* <button
                 className="btn btn-success h-25 align-self-end mb-4"
