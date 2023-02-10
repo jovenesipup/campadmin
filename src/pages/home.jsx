@@ -42,6 +42,7 @@ export default function home() {
   const [selectedFilter, setSelectedFilter] = useState("");
   const classBorder = "border border-3 border-primary";
   const [filterStatus, setFilterStatus] = useState(false);
+  const [hospedaStatus, setHospedaStatus] = useState(false);
   const [actualStatus, setActualStatus] = useState(null);
   const [tipoFiltro, setTipoFiltro] = useState("nombre");
 
@@ -152,12 +153,14 @@ export default function home() {
       });
 
     setActualStatus(status);
-    setFilterStatus(true);
+    setHospedaStatus(true);
   };
   const getOrFilter = (limit, item) => {
     const newItem = item;
     if (filterStatus) {
       getPersonByStatus(limit, limit * newItem, actualStatus);
+    }else if(hospedaStatus){
+      getPersonByHospeda(limit, limit * newItem, actualStatus);
     } else {
       getPersons(limit, item);
     }
