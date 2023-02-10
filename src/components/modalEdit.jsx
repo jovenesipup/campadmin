@@ -58,7 +58,8 @@ export default function modalEdit(item) {
       pago: data.pago,
       comentario: data.comentario,
       infante: data.infante,
-      edad: data.edad
+      edad: data.edad,
+      hospeda: data.hospeda
     };
     form.current.querySelector("#name").value = person.name;
     form.current.querySelector("#last_name").value = person.lastname;
@@ -76,6 +77,7 @@ export default function modalEdit(item) {
     form.current.querySelector("#infante").value = person.infante || "false";
     form.current.querySelector("#genero").value = person.genero;
     form.current.querySelector("#comentario").value = person.comentario || "";
+    form.current.querySelector("#hospeda").value = person.hospeda || "";
     setDataImageBD(person.pago)
     setBaseImage(person.pago)
   };
@@ -99,7 +101,8 @@ export default function modalEdit(item) {
       edad: form.current.querySelector("#edad").value,
       infante: form.current.querySelector("#infante").value,
       pago: baseImage,
-      comentario: form.current.querySelector("#comentario").value
+      comentario: form.current.querySelector("#comentario").value,
+      hospeda: form.current.querySelector("#hospeda").value
     };
     console.log(typeof person.pago);
      const res = await axios
@@ -238,6 +241,19 @@ export default function modalEdit(item) {
                     <option value="">Seleccione</option>
                     <option value="Soltero">Soltero</option>
                     <option value="Casado">Casado</option>
+                  </select>
+                  <label htmlFor="hospeda" className="form-label">
+                    Hospedaje
+                  </label>
+
+                  <select
+                    id="hospeda"
+                    className="form-select mb-4"
+                    aria-label="Seleccione"
+                  >
+                    <option value="">Seleccione</option>
+                    <option value="cabana">Cabaña</option>
+                    <option value="carpa">Carpa</option>
                   </select>
                 </div>
                 <div className="col">

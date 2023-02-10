@@ -441,6 +441,7 @@ export default function home() {
                     <th>Es Niño</th>
                     <th>Edad</th>
                     <th>Genero</th>
+                    <th>Hospeda</th>
                     <th>E. Civil</th>
                     <th>Ninos</th>
                     <th>Talla</th>
@@ -515,6 +516,9 @@ export default function home() {
                         </td>
                         <td className="text-nowrap text-break">
                           {item.genero || "M"}
+                        </td>
+                        <td className="text-nowrap text-break">
+                          {item.hospeda || "Cabaña"}
                         </td>
                         <td className="text-nowrap text-break">
                           {item.civil || "Soltero"}
@@ -618,6 +622,7 @@ export default function home() {
               <th>Es Niño</th>
               <th>Edad</th>
               <th>Genero</th>
+              <th>Hospeda</th>
               <th>E. Civil</th>
               <th>Ninos</th>
               <th>Talla</th>
@@ -671,6 +676,9 @@ export default function home() {
                   </td>
                   <td className="text-nowrap text-break">
                     {item.genero || "M"}
+                  </td>
+                  <td className="text-nowrap text-break">
+                    {item.hospeda || "Cabaña"}
                   </td>
                   <td className="text-nowrap text-break">
                     {item.civil || "Soltero"}

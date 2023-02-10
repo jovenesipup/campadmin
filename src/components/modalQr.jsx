@@ -12,7 +12,7 @@ export default function modalQr() {
   const [display, setDisplay] = useState('d-block')
 
   const getPersonByQr = async (data) => {
-    
+    setIsLoad(true)
     const res = await axios.get(`https://campamentoapi.pro/api/personas/dni/${data}`)
 
     if (res.data.length < 1) {
@@ -22,6 +22,7 @@ export default function modalQr() {
         setData(res.data[0])
         setDisplay('d-none')
       }
+      setIsLoad(false)
   }
   const resetCamera = () => {
     setDisplay('d-block')
@@ -78,9 +79,58 @@ export default function modalQr() {
                 <button type="button" className="btn btn-primary" onClick={() => resetCamera()}>
                     Escanear de nuevo
                 </button>
-                  <p>Nombre: {data?.nombre} {data?.apellidos}</p>
-                  <p>DNI: {data?.dni}</p>
-                  <p>Estado del cupo: {data?.estado}</p>
+                <div className="mt-4 d-flex flex-column card">
+                    <div className="card-header d-flex flex-column align-items-center">
+                        <i className={`
+                            bi
+                            ${
+                                (data.estado == "pendiente" &&
+                                    "bi-emoji-frown text-danger") ||
+                                (data.estado == "separado" &&
+                                    "bi-emoji-neutral text-primary") ||
+                                (data.estado == "separado125" &&
+                                    "bi-emoji-neutral text-primary") ||
+                                (data.estado == "separado135" &&
+                                    "bi-emoji-neutral text-primary") ||
+                                (data.estado == "completado" &&
+                                    "bi-emoji-laughing text-success") ||
+                                (data.estado == "completado200" &&
+                                    "bi-emoji-laughing text-success") ||
+                                (data.estado == "completado210" &&
+                                    "bi-emoji-laughing text-success") ||
+                                (data.estado == "completado250" &&
+                                    "bi-emoji-laughing text-success") ||
+                                (data.estado == "completado270" && "bi-emoji-laughing text-success")
+                                }
+                        `}
+                        style={{fontSize: '80px'}}
+                        ></i>
+                    </div>
+                    <div className="card-body">
+                        <p>Nombre: {data?.nombre} {data?.apellidos}</p>
+                        <p>DNI: {data?.dni}</p>
+                        <p>Estado del cupo: <span className={`text-uppercase badge ${
+                                    (data.estado == "pendiente" &&
+                                        "text-bg-danger") ||
+                                    (data.estado == "separado" &&
+                                        "text-bg-primary") ||
+                                    (data.estado == "separado125" &&
+                                        "text-bg-primary") ||
+                                    (data.estado == "separado135" &&
+                                        "text-bg-primary") ||
+                                    (data.estado == "completado" &&
+                                        "text-bg-success") ||
+                                    (data.estado == "completado200" &&
+                                        "text-bg-success") ||
+                                    (data.estado == "completado210" &&
+                                        "text-bg-success") ||
+                                    (data.estado == "completado250" &&
+                                        "text-bg-success") ||
+                                    (data.estado == "completado270" && "text-bg-success")
+                                    }`}>{data?.estado}</span>
+                            </p>
+                    </div>
+                </div>
               </div>  
             ) || data == 'error' && (
                 <p>No se encontraron resultados</p>
