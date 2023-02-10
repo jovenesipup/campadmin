@@ -36,6 +36,8 @@ export default function home() {
   const [tallaM, setTallaM] = useState("");
   const [tallaL, setTallaL] = useState("");
   const [tallaXL, setTallaXL] = useState("");
+  const [carpa, setCarpa] = useState("");
+  const [cabana, setCabana] = useState("");
   const [selected, setSelected] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("");
   const classBorder = "border border-3 border-primary";
@@ -117,7 +119,41 @@ export default function home() {
     setActualStatus(status);
     setFilterStatus(true);
   };
+  const getPersonByHospeda = async (limit, skipPage, status) => {
+    document
+      .querySelector(`#${actualStatus}`)
+      ?.classList?.remove("border-primary");
+    document.querySelector(`#${actualStatus}`)?.classList?.remove("border-3");
+    document.querySelector(`#${actualStatus}`)?.classList?.remove("border");
+    document.querySelector(`#${status}`)?.classList?.add("border-primary");
+    document.querySelector(`#${status}`)?.classList?.add("border-3");
+    document.querySelector(`#${status}`)?.classList?.add("border");
 
+    const total = await axios.get(
+      `https://campamentoapi.pro/api/personas/${status}/600&0`
+    );
+
+    const response = await axios
+      .get(
+        `https://campamentoapi.pro/api/personas/${status}/${limit}&${skipPage}`
+      )
+      .then((response) => {
+        console.log(response.data);
+        setListPerson(response.data);
+        setPages(Math.ceil(total.data.length / 13));
+        if (skipPage > 0) {
+          setActualPage(skipPage / 13 + 1);
+        } else {
+          setActualPage(1);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    setActualStatus(status);
+    setFilterStatus(true);
+  };
   const getOrFilter = (limit, item) => {
     const newItem = item;
     if (filterStatus) {
@@ -193,6 +229,16 @@ export default function home() {
     setTallaXL(
       response.data.docs.filter(
         (item) => item.estado != "pendiente" && item.hospeda != 'carpa' && item.talla == "XL"
+      ).length
+    );
+    setCabana(
+      response.data.docs.filter(
+        (item) => item.estado != "pendiente" && item.hospeda == 'cabana'
+      ).length
+    );
+    setCarpa(
+      response.data.docs.filter(
+        (item) => item.estado != "pendiente" && item.hospeda == 'carpa'
       ).length
     );
     console.log(response.data.docs);
@@ -347,6 +393,56 @@ export default function home() {
                               Total de cupos completados (270): {cupoCom270}
                             </div>
                             <div className="col m-1 p-2"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="accordion-item">
+                    <h2 className="accordion-header" id="header3">
+                      <button
+                        className="accordion-button"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapse3"
+                        aria-expanded="true"
+                        aria-controls="collapse3"
+                      >
+                        Filtros de Hospedaje
+                      </button>
+                    </h2>
+                    <div
+                      id="collapse3"
+                      className="accordion-collapse collapse"
+                      aria-labelledby="header3"
+                      data-bs-parent="#accordionFilter"
+                    >
+                      <div className="accordion-body">
+                        <div className="container">
+                          <div className="row">
+                            <div className={`p-2 m-1 col card`}>
+                              Total de personas a hospedar: {cabana+carpa}
+                            </div>
+                            <div
+                              className={`p-2 m-1 col card`}
+                              id="cabana"
+                              role="button"
+                              onClick={() =>
+                                getPersonByHospeda(13, 0, "cabana")
+                              }
+                            >
+                              Total de personas en cabaña: {cabana}
+                            </div>
+                            <div
+                              className={`p-2 m-1 col card`}
+                              id="carpa"
+                              role="button"
+                              onClick={() =>
+                                getPersonByHospeda(13, 0, "carpa")
+                              }
+                            >
+                              Total de personas en carpa (50%): {carpa}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -567,7 +663,8 @@ export default function home() {
                           {item.genero || "M"}
                         </td>
                         <td className="text-nowrap text-break">
-                          {item.hospeda || "Cabaña"}
+                          {item.hospeda == 'carpa' && 'Carpa' || ''}
+                          {item.hospeda == 'cabana' && 'Cabaña' || ''}
                         </td>
                         <td className="text-nowrap text-break">
                           {item.civil || "Soltero"}

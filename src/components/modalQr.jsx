@@ -127,7 +127,19 @@ export default function modalQr() {
                                     (data.estado == "completado250" &&
                                         "text-bg-success") ||
                                     (data.estado == "completado270" && "text-bg-success")
-                                    }`}>{data?.estado}</span>
+                                    }`}>
+                                        {`
+                                            ${data?.estado == 'pendiente' && 'pendiente' || ''} 
+                                            ${data?.estado == 'separado' && 'separado' || ''}
+                                            ${data?.estado == 'separado125' && 'separado' || ''}
+                                            ${data?.estado == 'separado135' && 'separado' || ''}
+                                            ${data?.estado == 'completado' && 'completado' || ''}
+                                            ${data?.estado == 'completado200' && 'completado' || ''}
+                                            ${data?.estado == 'completado210' && 'completado' || ''}
+                                            ${data?.estado == 'completado250' && 'completado' || ''}
+                                            ${data?.estado == 'completado270' && 'completado' || ''}
+                                        `}
+                                    </span>
                             </p>
                     </div>
                 </div>
