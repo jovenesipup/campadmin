@@ -8,9 +8,12 @@ import ModalExport from "../components/modalexport";
 import { useNavigate } from "react-router-dom";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import ModalQr from "../components/modalQr";
+import useUser from "../hooks/useUser";
 
 export default function home() {
   const navigate = useNavigate();
+
+  const userRole = useUser();
 
   const [listPerson, setListPerson] = useState([]);
   const [listPersonExcel, setListPersonExcel] = useState([]);
@@ -43,8 +46,12 @@ export default function home() {
   const classBorder = "border border-3 border-primary";
   const [filterStatus, setFilterStatus] = useState(false);
   const [hospedaStatus, setHospedaStatus] = useState(false);
+  const [busStatus, setbusStatus] = useState(false)
   const [actualStatus, setActualStatus] = useState(null);
   const [tipoFiltro, setTipoFiltro] = useState("nombre");
+  const [busSanta, setBusSanta] = useState("");
+  const [busPan, setBusPan] = useState("");
+  const [busMotupe, setBusMotube] = useState("");
 
   const logout = () => {
     localStorage.clear();
@@ -120,6 +127,42 @@ export default function home() {
     setActualStatus(status);
     setFilterStatus(true);
   };
+
+  const getPersonByBus = async (limit, skipPage, status) => {
+    document
+      .querySelector(`#${actualStatus}`)
+      ?.classList?.remove("border-primary");
+    document.querySelector(`#${actualStatus}`)?.classList?.remove("border-3");
+    document.querySelector(`#${actualStatus}`)?.classList?.remove("border");
+    document.querySelector(`#${status}`)?.classList?.add("border-primary");
+    document.querySelector(`#${status}`)?.classList?.add("border-3");
+    document.querySelector(`#${status}`)?.classList?.add("border");
+
+    const total = await axios.get(
+      `https://campamentoapi.pro/api/personas/${status}/600&0`
+    );
+
+    const response = await axios
+      .get(
+        `https://campamentoapi.pro/api/personas/${status}/${limit}&${skipPage}`
+      )
+      .then((response) => {
+        setListPerson(response.data);
+        setPages(Math.ceil(total.data.length / 13));
+        if (skipPage > 0) {
+          setActualPage(skipPage / 13 + 1);
+        } else {
+          setActualPage(1);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    setActualStatus(status);
+    setbusStatus(true);
+  };
+
   const getPersonByHospeda = async (limit, skipPage, status) => {
     document
       .querySelector(`#${actualStatus}`)
@@ -139,7 +182,6 @@ export default function home() {
         `https://campamentoapi.pro/api/personas/${status}/${limit}&${skipPage}`
       )
       .then((response) => {
-        console.log(response.data);
         setListPerson(response.data);
         setPages(Math.ceil(total.data.length / 13));
         if (skipPage > 0) {
@@ -155,12 +197,15 @@ export default function home() {
     setActualStatus(status);
     setHospedaStatus(true);
   };
+
   const getOrFilter = (limit, item) => {
     const newItem = item;
     if (filterStatus) {
       getPersonByStatus(limit, limit * newItem, actualStatus);
-    }else if(hospedaStatus){
+    } else if (hospedaStatus) {
       getPersonByHospeda(limit, limit * newItem, actualStatus);
+    }else if(busStatus){
+      getPersonByBus(limit, limit * newItem, actualStatus);
     } else {
       getPersons(limit, item);
     }
@@ -206,42 +251,75 @@ export default function home() {
     );
     setCupoMale(
       response.data.docs.filter(
-        (item) => item.estado != "pendiente" && item.hospeda != 'carpa' && item.genero == "M"
+        (item) =>
+          item.estado != "pendiente" &&
+          item.hospeda != "carpa" &&
+          item.genero == "M"
       ).length
     );
     setCupoFemale(
       response.data.docs.filter(
-        (item) => item.estado != "pendiente" && item.hospeda != 'carpa' && item.genero == "F"
+        (item) =>
+          item.estado != "pendiente" &&
+          item.hospeda != "carpa" &&
+          item.genero == "F"
       ).length
     );
     setTallaS(
       response.data.docs.filter(
-        (item) => item.estado != "pendiente" && item.hospeda != 'carpa' && item.talla == "S"
+        (item) =>
+          item.estado != "pendiente" &&
+          item.hospeda != "carpa" &&
+          item.talla == "S"
       ).length
     );
     setTallaM(
       response.data.docs.filter(
-        (item) => item.estado != "pendiente" && item.hospeda != 'carpa' && item.talla == "M"
+        (item) =>
+          item.estado != "pendiente" &&
+          item.hospeda != "carpa" &&
+          item.talla == "M"
       ).length
     );
     setTallaL(
       response.data.docs.filter(
-        (item) => item.estado != "pendiente" && item.hospeda != 'carpa' && item.talla == "L"
+        (item) =>
+          item.estado != "pendiente" &&
+          item.hospeda != "carpa" &&
+          item.talla == "L"
       ).length
     );
     setTallaXL(
       response.data.docs.filter(
-        (item) => item.estado != "pendiente" && item.hospeda != 'carpa' && item.talla == "XL"
+        (item) =>
+          item.estado != "pendiente" &&
+          item.hospeda != "carpa" &&
+          item.talla == "XL"
       ).length
     );
     setCabana(
       response.data.docs.filter(
-        (item) => item.estado != "pendiente" && item.hospeda == 'cabana'
+        (item) => item.estado != "pendiente" && item.hospeda == "cabana"
       ).length
     );
     setCarpa(
       response.data.docs.filter(
-        (item) => item.estado != "pendiente" && item.hospeda == 'carpa'
+        (item) => item.estado != "pendiente" && item.hospeda == "carpa"
+      ).length
+    );
+    setBusSanta(
+      response.data.docs.filter(
+        (item) => item.estado != "pendiente" && item.weiPoint == "2"
+      ).length
+    );
+    setBusPan(
+      response.data.docs.filter(
+        (item) => item.estado != "pendiente" && item.weiPoint == "1"
+      ).length
+    );
+    setBusMotube(
+      response.data.docs.filter(
+        (item) => item.estado != "pendiente" && item.weiPoint == "3"
       ).length
     );
     console.log(response.data.docs);
@@ -274,133 +352,136 @@ export default function home() {
             <div className="d-flex justify-content-between">
               <div className="w-100">
                 <div className="accordion mt-2" id="accordionFilter">
-                  <div className="accordion-item">
-                    <h2 className="accordion-header" id="header1">
-                      <button
-                        className="accordion-button"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#collapse1"
-                        aria-expanded="true"
-                        aria-controls="collapse1"
+                  {localStorage.getItem("role") == 1 && (
+                    <div className="accordion-item">
+                      <h2 className="accordion-header" id="header1">
+                        <button
+                          className="accordion-button"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#collapse1"
+                          aria-expanded="true"
+                          aria-controls="collapse1"
+                        >
+                          Filtros de Estado
+                        </button>
+                      </h2>
+                      <div
+                        id="collapse1"
+                        className="accordion-collapse collapse"
+                        aria-labelledby="header1"
+                        data-bs-parent="#accordionFilter"
                       >
-                        Filtros de Estado
-                      </button>
-                    </h2>
-                    <div
-                      id="collapse1"
-                      className="accordion-collapse collapse"
-                      aria-labelledby="header1"
-                      data-bs-parent="#accordionFilter"
-                    >
-                      <div className="accordion-body">
-                        <div className="container">
-                          <div className="row">
-                            <div className={`p-2 m-1 col card`}>
-                              Total de personas registras: {registerNumber}
+                        <div className="accordion-body">
+                          <div className="container">
+                            <div className="row">
+                              <div className={`p-2 m-1 col card`}>
+                                Total de personas registras: {registerNumber}
+                              </div>
+                              <div
+                                className={`p-2 m-1 col card`}
+                                id="pendiente"
+                                role="button"
+                                onClick={() =>
+                                  getPersonByStatus(13, 0, "pendiente")
+                                }
+                              >
+                                Total de cupos pendientes: {cupoPen}
+                              </div>
+                              <div
+                                className={`p-2 m-1 col card`}
+                                id="separado"
+                                role="button"
+                                onClick={() =>
+                                  getPersonByStatus(13, 0, "separado")
+                                }
+                              >
+                                Total de cupos separados (50%): {cupoSep}
+                              </div>
                             </div>
-                            <div
-                              className={`p-2 m-1 col card`}
-                              id="pendiente"
-                              role="button"
-                              onClick={() =>
-                                getPersonByStatus(13, 0, "pendiente")
-                              }
-                            >
-                              Total de cupos pendientes: {cupoPen}
+                            <div className="row">
+                              <div
+                                className={`p-2 m-1 col card`}
+                                id="separado125"
+                                role="button"
+                                onClick={() =>
+                                  getPersonByStatus(13, 0, "separado125")
+                                }
+                              >
+                                Total de cupos separados (125): {cupoPen125}
+                              </div>
+                              <div
+                                className={`p-2 m-1 col card`}
+                                id="separado135"
+                                role="button"
+                                onClick={() =>
+                                  getPersonByStatus(13, 0, "separado135")
+                                }
+                              >
+                                Total de cupos separados (135): {cupoPen135}
+                              </div>
+                              <div
+                                className={`p-2 m-1 col card`}
+                                id="completado"
+                                role="button"
+                                onClick={() =>
+                                  getPersonByStatus(13, 0, "completado")
+                                }
+                              >
+                                Total de cupos completados: {cupoCom}
+                              </div>
                             </div>
-                            <div
-                              className={`p-2 m-1 col card`}
-                              id="separado"
-                              role="button"
-                              onClick={() =>
-                                getPersonByStatus(13, 0, "separado")
-                              }
-                            >
-                              Total de cupos separados (50%): {cupoSep}
+                            <div className="row">
+                              <div
+                                className={`p-2 m-1 col card`}
+                                id="completado200"
+                                role="button"
+                                onClick={() =>
+                                  getPersonByStatus(13, 0, "completado200")
+                                }
+                              >
+                                Total de cupos completados (200): {cupoCom200}
+                              </div>
+                              <div
+                                className={`p-2 m-1 col card`}
+                                id="completado210"
+                                role="button"
+                                onClick={() =>
+                                  getPersonByStatus(13, 0, "completado210")
+                                }
+                              >
+                                Total de cupos completados (210): {cupoCom210}
+                              </div>
+                              <div
+                                className={`p-2 m-1 col card`}
+                                id="completado250"
+                                role="button"
+                                onClick={() =>
+                                  getPersonByStatus(13, 0, "completado250")
+                                }
+                              >
+                                Total de cupos completados (250): {cupoCom250}
+                              </div>
                             </div>
-                          </div>
-                          <div className="row">
-                            <div
-                              className={`p-2 m-1 col card`}
-                              id="separado125"
-                              role="button"
-                              onClick={() =>
-                                getPersonByStatus(13, 0, "separado125")
-                              }
-                            >
-                              Total de cupos separados (125): {cupoPen125}
+                            <div className="row">
+                              <div
+                                className={`p-2 m-1 col card`}
+                                id="completado270"
+                                role="button"
+                                onClick={() =>
+                                  getPersonByStatus(13, 0, "completado270")
+                                }
+                              >
+                                Total de cupos completados (270): {cupoCom270}
+                              </div>
+                              <div className="col m-1 p-2"></div>
                             </div>
-                            <div
-                              className={`p-2 m-1 col card`}
-                              id="separado135"
-                              role="button"
-                              onClick={() =>
-                                getPersonByStatus(13, 0, "separado135")
-                              }
-                            >
-                              Total de cupos separados (135): {cupoPen135}
-                            </div>
-                            <div
-                              className={`p-2 m-1 col card`}
-                              id="completado"
-                              role="button"
-                              onClick={() =>
-                                getPersonByStatus(13, 0, "completado")
-                              }
-                            >
-                              Total de cupos completados: {cupoCom}
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div
-                              className={`p-2 m-1 col card`}
-                              id="completado200"
-                              role="button"
-                              onClick={() =>
-                                getPersonByStatus(13, 0, "completado200")
-                              }
-                            >
-                              Total de cupos completados (200): {cupoCom200}
-                            </div>
-                            <div
-                              className={`p-2 m-1 col card`}
-                              id="completado210"
-                              role="button"
-                              onClick={() =>
-                                getPersonByStatus(13, 0, "completado210")
-                              }
-                            >
-                              Total de cupos completados (210): {cupoCom210}
-                            </div>
-                            <div
-                              className={`p-2 m-1 col card`}
-                              id="completado250"
-                              role="button"
-                              onClick={() =>
-                                getPersonByStatus(13, 0, "completado250")
-                              }
-                            >
-                              Total de cupos completados (250): {cupoCom250}
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div
-                              className={`p-2 m-1 col card`}
-                              id="completado270"
-                              role="button"
-                              onClick={() =>
-                                getPersonByStatus(13, 0, "completado270")
-                              }
-                            >
-                              Total de cupos completados (270): {cupoCom270}
-                            </div>
-                            <div className="col m-1 p-2"></div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  )}
+
                   <div className="accordion-item">
                     <h2 className="accordion-header" id="header3">
                       <button
@@ -424,7 +505,7 @@ export default function home() {
                         <div className="container">
                           <div className="row">
                             <div className={`p-2 m-1 col card`}>
-                              Total de personas a hospedar: {cabana+carpa}
+                              Total de personas a hospedar: {cabana + carpa}
                             </div>
                             <div
                               className={`p-2 m-1 col card`}
@@ -440,11 +521,65 @@ export default function home() {
                               className={`p-2 m-1 col card`}
                               id="carpa"
                               role="button"
+                              onClick={() => getPersonByHospeda(13, 0, "carpa")}
+                            >
+                              Total de personas en carpa: {carpa}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="accordion-item">
+                    <h2 className="accordion-header" id="header4">
+                      <button
+                        className="accordion-button"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapse4"
+                        aria-expanded="true"
+                        aria-controls="collapse4"
+                      >
+                        Filtros de Buses
+                      </button>
+                    </h2>
+                    <div
+                      id="collapse4"
+                      className="accordion-collapse collapse"
+                      aria-labelledby="header4"
+                      data-bs-parent="#accordionFilter"
+                    >
+                      <div className="accordion-body">
+                        <div className="container">
+                          <div className="row">
+                            <div className={`p-2 m-1 col card`}>
+                              Total de personas a transportar: {busMotupe + busPan + busSanta}
+                            </div>
+                            <div
+                              className={`p-2 m-1 col card`}
+                              id="pan"
+                              role="button"
                               onClick={() =>
-                                getPersonByHospeda(13, 0, "carpa")
+                                getPersonByBus(13, 0, "pan")
                               }
                             >
-                              Total de personas en carpa (50%): {carpa}
+                              Pan De Vida: {busPan}
+                            </div>
+                            <div
+                              className={`p-2 m-1 col card`}
+                              id="santa"
+                              role="button"
+                              onClick={() => getPersonByBus(13, 0, "santa")}
+                            >
+                              Santa Anita: {busSanta}
+                            </div>
+                            <div
+                              className={`p-2 m-1 col card`}
+                              id="motupe"
+                              role="button"
+                              onClick={() => getPersonByBus(13, 0, "motupe")}
+                            >
+                              Motupe: {busMotupe}
                             </div>
                           </div>
                         </div>
@@ -539,16 +674,18 @@ export default function home() {
                     </div>
                   </div>
                 </div>
-                <div className="d-flex flex-row justify-content-between">
+                <div className="d-flex flex-row justify-content-between my-3">
                   <div>
-                    <ReactHTMLTableToExcel
-                      id="test-table-xls-button"
-                      className="btn btn-success my-3"
-                      table="lista"
-                      filename="Registrados"
-                      sheet="Pagina"
-                      buttonText="Exportar Excel"
-                    />
+                    {localStorage.getItem("role") == 1 && (
+                      <ReactHTMLTableToExcel
+                        id="test-table-xls-button"
+                        className="btn btn-success"
+                        table="lista"
+                        filename="Registrados"
+                        sheet="Pagina"
+                        buttonText="Exportar Excel"
+                      />
+                    )}
                     <button
                       type="button"
                       data-bs-toggle="modal"
@@ -559,13 +696,14 @@ export default function home() {
                     </button>
                   </div>
                   <div>
-                    <div className={`p-2 m-1 col card`}>
-                      (Hombres): {cupoMale} | (Mujeres): {cupoFemale}
+                    <div className={`p-2 mx-1 col card`}>
+                      Hombres: {cupoMale} | Mujeres: {cupoFemale}
                     </div>
                   </div>
                   <div>
-                    <div className={`p-2 m-1 col card`}>
-                      (Polos S): {tallaS} | (Polos M): {tallaM} | (Polos L): {tallaL} | (Polos XL): {tallaXL}
+                    <div className={`p-2 mx-1 col card`}>
+                      Polos S: {tallaS} | Polos M: {tallaM} | Polos L: {tallaL}{" "}
+                      | Polos XL: {tallaXL}
                     </div>
                   </div>
                 </div>
@@ -590,6 +728,7 @@ export default function home() {
                     <th>Edad</th>
                     <th>Genero</th>
                     <th>Hospeda</th>
+                    <th>Pto Partida</th>
                     <th>E. Civil</th>
                     <th>Ninos</th>
                     <th>Talla</th>
@@ -599,13 +738,15 @@ export default function home() {
                     <th>Telefono</th>
                     <th>Origen</th>
                     <th className="">DNI</th>
-                    <th>Comentario</th>
-                    <th
-                      className="position-sticky end-0"
-                      style={{ position: "-webkit-sticky" }}
-                    >
-                      Actions
-                    </th>
+                    {localStorage.getItem("role") == 1 && <th>Comentario</th>}
+                    {localStorage.getItem("role") == 1 && (
+                      <th
+                        className="position-sticky end-0"
+                        style={{ position: "-webkit-sticky" }}
+                      >
+                        Actions
+                      </th>
+                    )}
                   </tr>
                 </thead>
                 <tbody>
@@ -613,41 +754,79 @@ export default function home() {
                     return (
                       <tr key={key}>
                         <td className="text-nowrap">
-                          <span
-                            className={`badge ${
-                              (item.estado == "pendiente" &&
-                                "text-bg-danger") ||
-                              (item.estado == "separado" &&
-                                "text-bg-primary") ||
-                              (item.estado == "separado125" &&
-                                "text-bg-primary") ||
-                              (item.estado == "separado135" &&
-                                "text-bg-primary") ||
-                              (item.estado == "completado" &&
-                                "text-bg-success") ||
-                              (item.estado == "completado200" &&
-                                "text-bg-info") ||
-                              (item.estado == "completado210" &&
-                                "text-bg-info") ||
-                              (item.estado == "completado250" &&
-                                "text-bg-info") ||
-                              (item.estado == "completado270" && "text-bg-info")
-                            }`}
-                          >
-                            {(item.estado == "completado200" &&
-                              "completado (200)") ||
-                              (item.estado == "completado210" &&
-                                "completado (210)") ||
-                              (item.estado == "completado250" &&
-                                "completado (250)") ||
-                              (item.estado == "completado270" &&
-                                "completado (270)") ||
-                              (item.estado == "separado125" &&
-                                "separado (125)") ||
-                              (item.estado == "separado135" &&
-                                "separado (135)") ||
-                              item.estado}
-                          </span>
+                          {(localStorage.getItem("role") == 1 && (
+                            <span
+                              className={`badge ${
+                                (item.estado == "pendiente" &&
+                                  "text-bg-danger") ||
+                                (item.estado == "separado" &&
+                                  "text-bg-primary") ||
+                                (item.estado == "separado125" &&
+                                  "text-bg-primary") ||
+                                (item.estado == "separado135" &&
+                                  "text-bg-primary") ||
+                                (item.estado == "completado" &&
+                                  "text-bg-success") ||
+                                (item.estado == "completado200" &&
+                                  "text-bg-info") ||
+                                (item.estado == "completado210" &&
+                                  "text-bg-info") ||
+                                (item.estado == "completado250" &&
+                                  "text-bg-info") ||
+                                (item.estado == "completado270" &&
+                                  "text-bg-info")
+                              }`}
+                            >
+                              {(item.estado == "completado200" &&
+                                "completado (200)") ||
+                                (item.estado == "completado210" &&
+                                  "completado (210)") ||
+                                (item.estado == "completado250" &&
+                                  "completado (250)") ||
+                                (item.estado == "completado270" &&
+                                  "completado (270)") ||
+                                (item.estado == "separado125" &&
+                                  "separado (125)") ||
+                                (item.estado == "separado135" &&
+                                  "separado (135)") ||
+                                item.estado}
+                            </span>
+                          )) || (
+                            <span
+                              className={`badge ${
+                                (item.estado == "pendiente" &&
+                                  "text-bg-danger") ||
+                                (item.estado == "separado" &&
+                                  "text-bg-primary") ||
+                                (item.estado == "separado125" &&
+                                  "text-bg-primary") ||
+                                (item.estado == "separado135" &&
+                                  "text-bg-primary") ||
+                                (item.estado == "completado" &&
+                                  "text-bg-success") ||
+                                (item.estado == "completado200" &&
+                                  "text-bg-info") ||
+                                (item.estado == "completado210" &&
+                                  "text-bg-info") ||
+                                (item.estado == "completado250" &&
+                                  "text-bg-info") ||
+                                (item.estado == "completado270" &&
+                                  "text-bg-info")
+                              }`}
+                            >
+                              {(item.estado == "completado200" &&
+                                "completado") ||
+                                (item.estado == "completado210" &&
+                                  "completado") ||
+                                (item.estado == "completado250" &&
+                                  "completado") ||
+                                (item.estado == "completado270" &&
+                                  "completado") ||
+                                (item.estado == "separado125" && "separado") ||
+                                (item.estado == "separado135" && "separado") ||
+                                item.estado}
+                            </span>
+                          )}
                         </td>
 
                         <td className="text-nowrap text-break">
@@ -666,8 +845,13 @@ export default function home() {
                           {item.genero || "M"}
                         </td>
                         <td className="text-nowrap text-break">
-                          {item.hospeda == 'carpa' && 'Carpa' || ''}
-                          {item.hospeda == 'cabana' && 'Cabaña' || ''}
+                          {(item.hospeda == "carpa" && "Carpa") || ""}
+                          {(item.hospeda == "cabana" && "Cabaña") || ""}
+                        </td>
+                        <td className="text-nowrap text-break">
+                          {(item.weiPoint == "1" && "Pan de vida") || ""}
+                          {(item.weiPoint == "2" && "Santa Anita") || ""}
+                          {(item.weiPoint == "3" && "Motupe") || ""}
                         </td>
                         <td className="text-nowrap text-break">
                           {item.civil || "Soltero"}
@@ -690,14 +874,18 @@ export default function home() {
                         <td className="text-nowrap">{item.telefono}</td>
                         <td className="text-nowrap">{item.origen}</td>
                         <td className="text-nowrap ">{item.dni}</td>
+                        {localStorage.getItem("role") == 1 && (
+                          <td
+                            className="text-truncate"
+                            style={{ maxWidth: "150px" }}
+                          >
+                            {item.comentario}
+                          </td>
+                        )}
                         <td
-                          className="text-truncate"
-                          style={{ maxWidth: "150px" }}
-                        >
-                          {item.comentario}
-                        </td>
-                        <td
-                          className="position-sticky end-0"
+                          className={`position-sticky end-0 ${
+                            localStorage.getItem("role") == 2 ? "d-none" : ""
+                          }`}
                           style={{ position: "-webkit-sticky" }}
                         >
                           <div className="d-flex flex-row">
@@ -772,6 +960,7 @@ export default function home() {
               <th>Edad</th>
               <th>Genero</th>
               <th>Hospeda</th>
+              <th>Pto Partida</th>
               <th>E. Civil</th>
               <th>Ninos</th>
               <th>Talla</th>
@@ -828,6 +1017,11 @@ export default function home() {
                   </td>
                   <td className="text-nowrap text-break">
                     {item.hospeda || "Cabaña"}
+                  </td>
+                  <td className="text-nowrap text-break">
+                    {(item.weiPoint == "1" && "Pan de vida") || ""}
+                    {(item.weiPoint == "2" && "Santa Anita") || ""}
+                    {(item.weiPoint == "3" && "Motupe") || ""}
                   </td>
                   <td className="text-nowrap text-break">
                     {item.civil || "Soltero"}
