@@ -917,7 +917,7 @@ export default function home() {
                 </tbody>
               </table>
             </div>
-            <ul className="pagination">
+            <ul className="pagination overflow-scroll">
               {/* <li className={`page-item ${prevPage ? "" : "disabled"}`}>
                 <button className="page-link" onClick={() => getPersons(7, prevPage)}>
                   Previous

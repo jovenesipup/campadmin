@@ -33,8 +33,8 @@ export default function login() {
     console.log(localStorage.getItem("user"));
   };
   return (
-    <div className="container pt-5 my-5" style={{ width: "28rem" }}>
-      <div className="card py-4 px-2">
+    <div className="container pt-5 my-5">
+      <div className="card py-4 px-2 col-lg-4 offset-lg-4 col-md-6 offset-md-3">
         <img src={Logo} className="card-img-top w-50 container " />
         <div className="card-body">
           <h5 className="card-title text-center">Administrador campamento</h5>
