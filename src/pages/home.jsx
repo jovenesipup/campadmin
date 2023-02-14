@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import ModalQr from "../components/modalQr";
 import useUser from "../hooks/useUser";
+import ModalFood from "../components/modalFood";
 
 export default function home() {
   const navigate = useNavigate();
@@ -46,7 +47,7 @@ export default function home() {
   const classBorder = "border border-3 border-primary";
   const [filterStatus, setFilterStatus] = useState(false);
   const [hospedaStatus, setHospedaStatus] = useState(false);
-  const [busStatus, setbusStatus] = useState(false)
+  const [busStatus, setbusStatus] = useState(false);
   const [actualStatus, setActualStatus] = useState(null);
   const [tipoFiltro, setTipoFiltro] = useState("nombre");
   const [busSanta, setBusSanta] = useState("");
@@ -204,7 +205,7 @@ export default function home() {
       getPersonByStatus(limit, limit * newItem, actualStatus);
     } else if (hospedaStatus) {
       getPersonByHospeda(limit, limit * newItem, actualStatus);
-    }else if(busStatus){
+    } else if (busStatus) {
       getPersonByBus(limit, limit * newItem, actualStatus);
     } else {
       getPersons(limit, item);
@@ -553,15 +554,14 @@ export default function home() {
                         <div className="container">
                           <div className="row">
                             <div className={`p-2 m-1 col card`}>
-                              Total de personas a transportar: {busMotupe + busPan + busSanta}
+                              Total de personas a transportar:{" "}
+                              {busMotupe + busPan + busSanta}
                             </div>
                             <div
                               className={`p-2 m-1 col card`}
                               id="pan"
                               role="button"
-                              onClick={() =>
-                                getPersonByBus(13, 0, "pan")
-                              }
+                              onClick={() => getPersonByBus(13, 0, "pan")}
                             >
                               Pan De Vida: {busPan}
                             </div>
@@ -739,14 +739,12 @@ export default function home() {
                     <th>Origen</th>
                     <th className="">DNI</th>
                     {localStorage.getItem("role") == 1 && <th>Comentario</th>}
-                    {localStorage.getItem("role") == 1 && (
-                      <th
-                        className="position-sticky end-0"
-                        style={{ position: "-webkit-sticky" }}
-                      >
-                        Actions
-                      </th>
-                    )}
+                    <th
+                      className="position-sticky end-0"
+                      style={{ position: "-webkit-sticky" }}
+                    >
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -883,9 +881,7 @@ export default function home() {
                           </td>
                         )}
                         <td
-                          className={`position-sticky end-0 ${
-                            localStorage.getItem("role") == 2 ? "d-none" : ""
-                          }`}
+                          className={`position-sticky end-0`}
                           style={{ position: "-webkit-sticky" }}
                         >
                           <div className="d-flex flex-row">
@@ -893,23 +889,40 @@ export default function home() {
                               type="button"
                               data-bs-toggle="modal"
                               data-bs-target={`#b${item._id}`}
-                              className="btn btn-primary me-2 d-inline-block align-self-start"
+                              className={`btn btn-primary me-2 d-inline-block align-self-start ${
+                                localStorage.getItem("role") == 2
+                                  ? "d-none"
+                                  : ""
+                              }`}
                             >
                               <i className="bi bi-pencil"></i>
                             </button>
                             <button
                               type="button"
-                              className="btn btn-danger d-inline-block align-self-start"
+                              className={`btn btn-danger me-2 d-inline-block align-self-start ${
+                                localStorage.getItem("role") == 2
+                                  ? "d-none"
+                                  : ""
+                              }`}
                               data-bs-toggle="modal"
                               data-bs-target={`#a${item._id}`}
                             >
                               <i className="bi bi-trash"></i>
+                            </button>
+                            <button
+                              type="button"
+                              className="btn btn-warning d-inline-block align-self-start"
+                              data-bs-toggle="modal"
+                              data-bs-target={`#f${item._id}`}
+                            >
+                              <i className="bi bi-basket"></i>
                             </button>
                           </div>
                         </td>
                         <td>
                           <Modaldelete dataPerson={item}></Modaldelete>
                           <ModalEdit dataPerson={item}></ModalEdit>
+                          <ModalFood dataPerson={item}></ModalFood>
                         </td>
                       </tr>
                     );
