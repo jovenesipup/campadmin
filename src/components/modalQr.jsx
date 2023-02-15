@@ -124,6 +124,7 @@ export default function modalQr() {
                         Nombre: {data?.nombre} {data?.apellidos}
                       </p>
                       <p>DNI: {data?.dni}</p>
+                      <p>Pto Partida: {data?.weiPoint == '1' && 'Pan de Vida' || data?.weiPoint == '2' && 'Santa Anita' || data?.weiPoint == '3' && 'Motupe'}</p>
                       <p>
                         Estado del cupo:{" "}
                         <span
