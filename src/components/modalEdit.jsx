@@ -59,7 +59,8 @@ export default function modalEdit(item) {
       comentario: data.comentario,
       infante: data.infante,
       edad: data.edad,
-      hospeda: data.hospeda
+      hospeda: data.hospeda,
+      weiPoint: data?.weiPoint
     };
     form.current.querySelector("#name").value = person.name;
     form.current.querySelector("#last_name").value = person.lastname;
@@ -78,6 +79,7 @@ export default function modalEdit(item) {
     form.current.querySelector("#genero").value = person.genero;
     form.current.querySelector("#comentario").value = person.comentario || "";
     form.current.querySelector("#hospeda").value = person.hospeda || "";
+    form.current.querySelector("#weiPoint").value = person.weiPoint || "";
     setDataImageBD(person.pago)
     setBaseImage(person.pago)
   };
@@ -102,7 +104,8 @@ export default function modalEdit(item) {
       infante: form.current.querySelector("#infante").value,
       pago: baseImage,
       comentario: form.current.querySelector("#comentario").value,
-      hospeda: form.current.querySelector("#hospeda").value
+      hospeda: form.current.querySelector("#hospeda").value,
+      weiPoint: form.current.querySelector("#weiPoint").value
     };
     console.log(typeof person.pago);
      const res = await axios
@@ -368,6 +371,20 @@ export default function modalEdit(item) {
                     placeholder="Adjuntar imagen"
                     aria-label="pago"
                   />
+                  <label htmlFor="weiPoint" className="form-label">
+                    Pto Partida
+                  </label>
+
+                  <select
+                    id="weiPoint"
+                    className="form-select mb-4"
+                    aria-label="Seleccione"
+                  >
+                    <option value="">Seleccione</option>
+                    <option value="1">Pan de Vida</option>
+                    <option value="2">Santa Anita</option>
+                    <option value="3">Motupe</option>
+                  </select>
                 </div>
               </div>
               <label htmlFor="comentario" className="form-label">
