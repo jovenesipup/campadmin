@@ -254,7 +254,9 @@ export default function home() {
       response.data.docs.filter(
         (item) =>
           item.estado != "pendiente" &&
-          item.hospeda != "carpa" &&
+          item.estado != "separado" &&
+          item.estado != "separado125" &&
+          item.estado != "separado135" &&
           item.genero == "M"
       ).length
     );
@@ -262,7 +264,9 @@ export default function home() {
       response.data.docs.filter(
         (item) =>
           item.estado != "pendiente" &&
-          item.hospeda != "carpa" &&
+          item.estado != "separado" &&
+          item.estado != "separado125" &&
+          item.estado != "separado135" &&
           item.genero == "F"
       ).length
     );
